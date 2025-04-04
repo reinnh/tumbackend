@@ -1,0 +1,26 @@
+# Ignore VS Code settings
+.vscode/
+
+# Ignore node modules
+node_modules/
+
+
+
+
+*.log
+
+# Env files
+.env
+.env.local
+
+# Dependency directories
+bower_components/
+jspm_packages/
+
+# Build output
+dist/
+build/
+out/
+
+
+# Mac/Windows trash
