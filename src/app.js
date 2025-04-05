@@ -1,6 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
+import cookieParser from "cookie-parser";
+import cors from 'cors';
+
+
 /* import { logRequestsAndErrors, logger } from './config/logger.js'; */
 
 // Load environment variables
@@ -8,6 +12,13 @@ dotenv.config();
 
 // Initialize the Express application
 const app = express();
+app.use(cors({
+    origin: true, // your Vite frontend
+    credentials: true,               // allow cookies
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+  }));
+app.use(cookieParser());
 
 // Connect to the database
 connectDB();
@@ -27,6 +38,7 @@ import paymentRoutes from './routes/paymentroutes.js';
 app.use('/tum/auth', authRoutes);
 app.use('/tum/users', userRoutes);
 app.use('/tum/courses', courseRoutes);
+
 app.use('/tum/exams', examRoutes);
 app.use('/tum/payments', paymentRoutes);
 

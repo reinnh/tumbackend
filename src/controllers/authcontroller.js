@@ -2,11 +2,13 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
+
 
 // Register new user
 export const register = async (req, res) => {
     const { name, email, password } = req.body;
-    if(!name || !email || !password ) return res.status(404).json({"message":"please input user info"})
+    if (!name || !email || !password) return res.status(404).json({ "message": "please input user info" })
     try {
 
         // Check if user already exists
@@ -48,7 +50,15 @@ export const login = async (req, res) => {
         // Generate JWT token
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-        res.json({ message: "Login successful", token });
+        res
+            .cookie("token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production", // only over HTTPS in production
+                sameSite: "Strict", // or "Lax", depending on your frontend/backend setup
+                maxAge: 60 * 60 * 1000, // 1 hour
+            })
+            .json({ message: "Login successful" });
+
     } catch (error) {
         console.error("Error logging in:", error);
         res.status(500).json({ message: "Error logging in", error });
